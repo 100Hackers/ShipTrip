@@ -21,7 +21,7 @@ class MessageClient {
             String remoteName = remoteAddress.getHostName();
             int remotePort = remoteAddress.getPort();
 
-            Scanner scan = new Scanner(System.in);
+            BufferedReader scan = new BufferedReader(new InputStreamReader(System.in));
 
             // receive reply from server
             while (true) {
@@ -31,8 +31,8 @@ class MessageClient {
                     System.out.println(new String(b));
                 }
 
-                if (scan.hasNextLine()) {
-                    connection.getOutputStream().write((scan.nextLine()+"\n").getBytes());
+                if (scan.ready()) {
+                    connection.getOutputStream().write((scan.readLine()+"\n").getBytes());
                     connection.getOutputStream().flush();
                 }
             }
