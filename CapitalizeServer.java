@@ -3,9 +3,10 @@ import java.net.*;
 import java.io.*;
 import java.util.Scanner;
 
-class CapitalizeServer {
+class CapitalizeServer implements Runnable {
   
-  static boolean[] readies;
+  static final int PORT = 31416;
+  static volatile boolean[] readies;
   static String[] ips;
 
   public static void main(String[] args) {
@@ -16,11 +17,10 @@ class CapitalizeServer {
     ips = new String[2];
 
 
-    ServerSocket welcomeSocket;
+    ServerSocket welcomeSocket = new ServerSocket(PORT);
     
-    Thread t0 = new Thread(new ServedUP(0, readies));
-    Thread t1 = new Thread(new ServedUP(1, readies));
-
+    Thread t0 = new Thread(new ServedUP(0, welcomeSocket.accept()));
+    Thread t1 = new Thread(new ServedUP(1, welcomeSocket.accept()));
 
     t0.start();
     t1.start();
@@ -32,20 +32,19 @@ class CapitalizeServer {
 
   public static class ServedUP implements Runnable {
     int id;
-     volatile boolean[] reads;
+    Socket sock;
 
-    public ServedUP(int d, boolean[] rs) {
+    public ServedUP(int d, Socket s) {
         id = d;
-        reads = rs;
+        sock = s;
     }
 
     public void run() {
-        ServerSocket welcomeSocket;
-    int PORT = 31416;
 
         try {
-            if (id == 1) while(!reads[0]);
+            if (id == 1) while(!readies[0]);
             System.out.println(id + " " + "starting");
+            PrintStream pstream = new PrintStream(socket.getOutputStream());
           welcomeSocket= new ServerSocket();
          welcomeSocket.setReuseAddress(true);
          welcomeSocket.bind(new InetSocketAddress(PORT));
