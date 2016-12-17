@@ -19,16 +19,38 @@ class MessageServer {
         new Thread(new AcceptConnections()).start();
 
         while (true) {
-            for (Socket sock : connections) {
-                if (sock.getInputStream().available() > 0) {
+            Iterator<Socket> i = connections.iterator();
 
-                    byte[] b = new byte[sock.getInputStream().available()];
-                    sock.getInputStream().read(b);
+            while (i.hasNext()) {
+                Socket sock = i.next();
+                int count = 0;
+                try {
+                    count = sock.getInputStream().available();
+                } catch (Exception e) {
+                    i.remove();
+                    break;
+                }
 
-                    for (Socket otherSocks : connections) {
-                        if (otherSocks != sock) {
-                            otherSocks.getOutputStream().write(b);
-                            otherSocks.getOutputStream().flush();
+                if (count > 0) {
+                    byte[] b = new byte[count];
+                    try {
+                        sock.getInputStream().read(b);
+                    } catch (Exception e) {
+                        i.remove();
+                        break;
+                    }
+
+                    Iterator<Socket> j = connections.iterator();
+
+                    while (j.hasNext()) {
+                        Socket otherSocks = j.next();
+                        try {
+                            if (otherSocks != sock) {
+                                otherSocks.getOutputStream().write(b);
+                                otherSocks.getOutputStream().flush();
+                            }
+                        } catch (Exception e) {
+                            j.remove();
                         }
                     }
                 }
