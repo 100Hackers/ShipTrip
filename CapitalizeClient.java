@@ -9,20 +9,24 @@ class CapitalizeClient {
     int PORT = 31416;
     try {
       Socket connection = new Socket(HOST, PORT);
-      // details about the connection
+
+      // Local
       InetSocketAddress localAddress = (InetSocketAddress) connection.getLocalSocketAddress();
       String localName = localAddress.getHostName();
       int localPort = localAddress.getPort();
+
+      // Remote
       InetSocketAddress remoteAddress = (InetSocketAddress) connection.getRemoteSocketAddress();
       String remoteName = remoteAddress.getHostName();
       int remotePort = remoteAddress.getPort();
-      // get input from user
-      // send message to server
+
       // receive reply from server
       Scanner networkIn = new Scanner(connection.getInputStream());
       String messageIn = networkIn.nextLine();
       System.out.println("RCVD: " + messageIn);
       connection.close();
+
+
     } catch (IOException e) {
       e.printStackTrace();
     } 
