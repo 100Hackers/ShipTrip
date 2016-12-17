@@ -33,7 +33,7 @@ class MessageClient {
 
                 if (scan.ready()) {
                     if (args.length > 0) {
-                        connection.getOutputStream().write((args[0] + " " + scan.readLine()).getBytes());
+                        connection.getOutputStream().write((args[0] + ": " + scan.readLine()).getBytes());
                     } else {
                         connection.getOutputStream().write(("Anon: " + scan.readLine()).getBytes());
                     }
