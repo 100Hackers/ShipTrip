@@ -32,7 +32,7 @@ class MessageClient {
                 }
 
                 if (scan.ready()) {
-                    connection.getOutputStream().write((scan.readLine()+"\n").getBytes());
+                    connection.getOutputStream().write(("Rcv: " + scan.readLine()).getBytes());
                     connection.getOutputStream().flush();
                 }
             }
